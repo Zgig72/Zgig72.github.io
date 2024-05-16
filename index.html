@@ -216,7 +216,7 @@
 </head>
 <body>
     <div class="counter">Matches: <span id="match-count">0</span></div>
-    <div class="timer">Time: <span id="time-remaining">30</span>s</div>
+    <div class="timer">Time: <span id="time-remaining">60</span>s</div>
     <div class="game-container">
         <div class="memory-game">
             <!-- Cards will be dynamically generated here -->
@@ -226,7 +226,7 @@
         </div>
     </div>
     <div class="game-over" id="game-over-message"></div>
-    <button class="reset-button" id="reset-button" style="display: none;">Reset Game</button>
+    <button class="reset-button" id="reset-button">Reset Game</button>
     <div class="confetti" id="confetti"></div>
     <div class="win-message" id="win-message">YOU WIN!</div>
 
@@ -237,17 +237,35 @@
     </div>
 
     <script>
+        function generateTerm (totalValue) {
+            firstValue = Math.random() * (totalValue-1);
+            firstValue = Math.round(firstValue);
+            secondValue = totalValue - firstValue;
+            termName = firstValue.toString() + '+' + secondValue.toString();
+            return termName;
+        };
+
         const cardsArray = [
-            { term: '1+4', value: '5' },
-            { term: '2+3', value: '5' },
-            { term: '1+0', value: '1' },
-            { term: '0+1', value: '1' },
-            { term: '2+2', value: '4' },
-            { term: '3+1', value: '4' },
-            { term: '0+2', value: '2' },
-            { term: '1+1', value: '2' },
-            { term: '6-3', value: '3' },
-            { term: '7-4', value: '3' }
+            { term: generateTerm(5), value: '5' },
+            { term: generateTerm(5), value: '5' },
+            { term: generateTerm(5), value: '5' },
+            { term: generateTerm(5), value: '5' },
+            { term: generateTerm(4), value: '4' },
+            { term: generateTerm(4), value: '4' },
+            { term: generateTerm(4), value: '4' },
+            { term: generateTerm(4), value: '4' },
+            { term: generateTerm(3), value: '3' },
+            { term: generateTerm(3), value: '3' },
+            { term: generateTerm(3), value: '3' },
+            { term: generateTerm(3), value: '3' },
+            { term: generateTerm(2), value: '2' },
+            { term: generateTerm(2), value: '2' },
+            { term: generateTerm(2), value: '2' },
+            { term: generateTerm(2), value: '2' },
+            { term: generateTerm(1), value: '1' },
+            { term: generateTerm(1), value: '1' },
+            { term: generateTerm(1), value: '1' },
+            { term: generateTerm(1), value: '1' },
         ];
 
         const gameContainer = document.querySelector('.memory-game');
@@ -262,7 +280,7 @@
         let cardElements = [];
         let matchCount = 0;
         let timer;
-        let timeRemaining = 30;
+        let timeRemaining = 60;
         let gameActive = false;
         let flippedCards = [];
         let boardLocked = false;
@@ -296,10 +314,10 @@
             gameActive = true;
             matchCount = 0;
             matchCountElement.textContent = matchCount;
-            timeRemaining = 30;
+            timeRemaining = 60;
             timeRemainingElement.textContent = timeRemaining;
 
-            const doubledCardsArray = shuffle([...cardsArray, ...cardsArray]);
+            const doubledCardsArray = shuffle([...cardsArray]);
             doubledCardsArray.forEach(card => {
                 const cardElement = createCard(card.term, card.value);
                 gameContainer.appendChild(cardElement);
@@ -328,7 +346,6 @@
             gameActive = false;
             cardElements.forEach(card => card.removeEventListener('click', flipCard));
             gameOverMessage.textContent = `Matches: ${matchCount}`;
-            resetButton.style.display = 'block';
         }
 
         function flipCard() {
@@ -388,6 +405,8 @@
                 triggerConfetti();
                 winMessage.style.display = 'block';
                 winMessage.style.animation = 'fadeInOut 3s forwards';
+                endGame();
+
             }
         }
 
