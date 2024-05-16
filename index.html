@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Protected Page</title>
+    <title>Memory Matching Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,84 +13,404 @@
             flex-direction: column;
             height: 100vh;
             margin: 0;
-            background-color: #f4f4f4;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
         }
 
-        .container {
-            text-align: center;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            max-width: 100px;
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .memory-game {
+            width: 90vw;
+            max-width: 640px;
+            display: flex;
+            flex-wrap: wrap;
+            perspective: 1000px;
         }
 
-        .form-group input[type="password"] {
+        .memory-card {
+            width: calc(25% - 10px);
+            height: 20vw;
+            max-height: 150px;
+            margin: 5px;
+            position: relative;
+            transform: scale(1);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .memory-card.flip {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .front, .memory-card .back {
+            position: absolute;
             width: 100%;
-            padding: 0px;
-            border: 1px solid #ccc;
+            height: 100%;
+            backface-visibility: hidden;
             border-radius: 5px;
-        }
-
-        .form-group input[type="submit"] {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #28a745;
-            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
             cursor: pointer;
         }
 
-        .form-group input[type="submit"]:hover {
-            background-color: #218838;
+        .memory-card .front {
+            background: #fff;
         }
 
-        .error {
-            color: red;
-            margin-top: 10px;
+        .memory-card .back {
+            background: #2e3d49;
+            color: white;
+            transform: rotateY(180deg);
         }
 
-        .obtain-password-link {
-            margin-top: 15px;
+        .memory-card.swirl {
+            animation: swirl 1s forwards;
+        }
+
+        @keyframes swirl {
+            0% { transform: rotate(0); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .counter, .timer {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .matched-card {
+            width: 100%;
+            height: 50px;
+            margin-bottom: 5px;
+            background-color: #2e3d49;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        .game-over {
+            font-size: 3em;
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .reset-button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #2e3d49;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        .win-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            display: none;
+            animation: fadeInOut 3s forwards;
+            text-align: center;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .overlay button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #2e3d49;
+            color: white;
+        }
+
+        @media (min-width: 768px) {
+            .game-container {
+                flex-direction: row;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="logo.png" alt="Logo" class="logo">
-        <form id="passwordForm">
-            <div class="form-group">
-                <label for="password">Enter Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Submit">
-            </div>
-            <div class="error" id="errorMessage" style="display:none;"> <span id="obtainPasswordLink" class="obtain-password-link" style="display:none;">To Obtain the Password, please visit: <a href="https://www.teacherspayteachers.com/Store/Practicemakesprogresswithlj">Practice Makes Progress with LJ</a></span></div>
-        </form>
+    <div class="counter">Matches: <span id="match-count">0</span></div>
+    <div class="timer">Time: <span id="time-remaining">30</span>s</div>
+    <div class="game-container">
+        <div class="memory-game">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+        <div class="matched-stack">
+            <!-- Matched cards will be moved here -->
+        </div>
+    </div>
+    <div class="game-over" id="game-over-message"></div>
+    <button class="reset-button" id="reset-button" style="display: none;">Reset Game</button>
+    <div class="confetti" id="confetti"></div>
+    <div class="win-message" id="win-message">YOU WIN!</div>
+
+    <div class="overlay" id="overlay">
+        <div>Get Ready To Match!</div>
+        <div>Tap Tiles that will equal the same number to make a match!</div>
+        <button id="ready-button">I'm Ready!</button>
     </div>
 
     <script>
-        document.getElementById('passwordForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const obtainPasswordLink = document.getElementById('obtainPasswordLink');
+        const cardsArray = [
+            { term: '1+4', value: '5' },
+            { term: '2+3', value: '5' },
+            { term: '1+0', value: '1' },
+            { term: '0+1', value: '1' },
+            { term: '2+2', value: '4' },
+            { term: '3+1', value: '4' },
+            { term: '0+2', value: '2' },
+            { term: '1+1', value: '2' },
+            { term: '6-3', value: '3' },
+            { term: '7-4', value: '3' }
+        ];
 
-            if (password === 'ljlearning') {
-                window.location.href = 'matching.html';
-            } else {
-                errorMessage.style.display = 'block';
-                obtainPasswordLink.style.display = 'inline';
+        const gameContainer = document.querySelector('.memory-game');
+        const matchCountElement = document.getElementById('match-count');
+        const timeRemainingElement = document.getElementById('time-remaining');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const resetButton = document.getElementById('reset-button');
+        const confettiContainer = document.getElementById('confetti');
+        const winMessage = document.getElementById('win-message');
+        const overlay = document.getElementById('overlay');
+        const readyButton = document.getElementById('ready-button');
+        let cardElements = [];
+        let matchCount = 0;
+        let timer;
+        let timeRemaining = 30;
+        let gameActive = false;
+        let flippedCards = [];
+        let boardLocked = false;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
+            return array;
+        }
+
+        function createCard(term, value) {
+            const card = document.createElement('div');
+            card.classList.add('memory-card');
+            card.dataset.term = term;
+            card.dataset.value = value;
+            card.innerHTML = `
+                <div class="front">${term}</div>
+                <div class="back">${value}</div>
+            `;
+            return card;
+        }
+
+        function initGame() {
+            gameContainer.innerHTML = '';
+            gameOverMessage.textContent = '';
+            gameOverMessage.style.display = 'none';
+            winMessage.style.opacity = '0';
+            winMessage.style.display = 'none';
+            gameActive = true;
+            matchCount = 0;
+            matchCountElement.textContent = matchCount;
+            timeRemaining = 30;
+            timeRemainingElement.textContent = timeRemaining;
+
+            const doubledCardsArray = shuffle([...cardsArray, ...cardsArray]);
+            doubledCardsArray.forEach(card => {
+                const cardElement = createCard(card.term, card.value);
+                gameContainer.appendChild(cardElement);
+            });
+
+            cardElements = document.querySelectorAll('.memory-card');
+            cardElements.forEach(card => card.addEventListener('click', flipCard));
+
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    timeRemainingElement.textContent = timeRemaining;
+                } else {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            cardElements.forEach(card => card.removeEventListener('click', flipCard));
+            gameOverMessage.textContent = `Matches: ${matchCount}`;
+            resetButton.style.display = 'block';
+        }
+
+        function flipCard() {
+            if (!gameActive || boardLocked) return;
+            if (this.classList.contains('flip') || flippedCards.includes(this)) return;
+
+            this.classList.add('flip');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                boardLocked = true;
+                setTimeout(checkForMatch, 500);
+            }
+        }
+
+        function checkForMatch() {
+            const [card1, card2] = flippedCards;
+            const isMatch = card1.dataset.term === card2.dataset.term || card1.dataset.value === card2.dataset.value;
+            if (isMatch) {
+                handleMatch(card1, card2);
+            } else {
+                unflipCards(card1, card2);
+            }
+        }
+
+        function handleMatch(card1, card2) {
+            card1.removeEventListener('click', flipCard);
+            card2.removeEventListener('click', flipCard);
+            card1.classList.add('swirl');
+            card2.classList.add('swirl');
+            updateMatchCounter();
+            setTimeout(() => {
+                card1.style.visibility = 'hidden';
+                card2.style.visibility = 'hidden';
+                resetFlippedCards();
+                boardLocked = false;
+            }, 1000);
+        }
+
+        function unflipCards(card1, card2) {
+            setTimeout(() => {
+                card1.classList.remove('flip');
+                card2.classList.remove('flip');
+                resetFlippedCards();
+                boardLocked = false;
+            }, 1000);
+        }
+
+        function resetFlippedCards() {
+            flippedCards = [];
+        }
+
+        function updateMatchCounter() {
+            matchCount++;
+            matchCountElement.textContent = matchCount;
+            if (matchCount === 10) {
+                triggerConfetti();
+                winMessage.style.display = 'block';
+                winMessage.style.animation = 'fadeInOut 3s forwards';
+            }
+        }
+
+        function triggerConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.classList.add('confetti-piece');
+                confettiPiece.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confettiPiece.style.left = `${Math.random() * 100}vw`;
+                confettiPiece.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                confettiContainer.appendChild(confettiPiece);
+            }
+            setTimeout(() => {
+                confettiContainer.innerHTML = '';
+                winMessage.style.display = 'none';
+            }, 3000); // Duration of confetti animation
+        }
+
+        resetButton.addEventListener('click', initGame);
+
+        readyButton.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            initGame();
         });
     </script>
 </body>
