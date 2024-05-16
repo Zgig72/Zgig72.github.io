@@ -238,34 +238,38 @@
 
     <script>
         function generateTerm (totalValue) {
-            firstValue = Math.random() * (totalValue-1);
+            firstValue = Math.random() * (totalValue);
             firstValue = Math.round(firstValue);
             secondValue = totalValue - firstValue;
             termName = firstValue.toString() + '+' + secondValue.toString();
             return termName;
         };
 
+        function generateCard (value_) {
+            return { term: generateTerm(value_), value: value_ };
+        };
+
         const cardsArray = [
-            { term: generateTerm(5), value: '5' },
-            { term: generateTerm(5), value: '5' },
-            { term: generateTerm(5), value: '5' },
-            { term: generateTerm(5), value: '5' },
-            { term: generateTerm(4), value: '4' },
-            { term: generateTerm(4), value: '4' },
-            { term: generateTerm(4), value: '4' },
-            { term: generateTerm(4), value: '4' },
-            { term: generateTerm(3), value: '3' },
-            { term: generateTerm(3), value: '3' },
-            { term: generateTerm(3), value: '3' },
-            { term: generateTerm(3), value: '3' },
-            { term: generateTerm(2), value: '2' },
-            { term: generateTerm(2), value: '2' },
-            { term: generateTerm(2), value: '2' },
-            { term: generateTerm(2), value: '2' },
-            { term: generateTerm(1), value: '1' },
-            { term: generateTerm(1), value: '1' },
-            { term: generateTerm(1), value: '1' },
-            { term: generateTerm(1), value: '1' },
+             generateCard(5),
+             generateCard(5),
+             generateCard(5),
+             generateCard(5),
+             generateCard(4),
+             generateCard(4),
+             generateCard(4),
+             generateCard(4),
+             generateCard(3),
+             generateCard(3),
+             generateCard(3),
+             generateCard(3),
+             generateCard(2),
+             generateCard(2),
+             generateCard(2),
+             generateCard(2),
+             generateCard(1),
+             generateCard(1),
+             generateCard(1),
+             generateCard(1)
         ];
 
         const gameContainer = document.querySelector('.memory-game');
