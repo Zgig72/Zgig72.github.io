@@ -72,7 +72,7 @@
         }
 
         .memory-card.swirl {
-            animation: swirl 1s forwards;
+            animation: swirl 0.5s forwards;
         }
 
         @keyframes swirl {
@@ -340,7 +340,7 @@
 
             if (flippedCards.length === 2) {
                 boardLocked = true;
-                setTimeout(checkForMatch, 500);
+                setTimeout(checkForMatch, 250);
             }
         }
 
@@ -365,7 +365,7 @@
                 card2.style.visibility = 'hidden';
                 resetFlippedCards();
                 boardLocked = false;
-            }, 1000);
+            }, 500);
         }
 
         function unflipCards(card1, card2) {
@@ -374,7 +374,7 @@
                 card2.classList.remove('flip');
                 resetFlippedCards();
                 boardLocked = false;
-            }, 1000);
+            }, 500);
         }
 
         function resetFlippedCards() {
