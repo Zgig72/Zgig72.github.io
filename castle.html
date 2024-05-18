@@ -56,6 +56,7 @@
         <button onclick="location.href='castle.html'">Travel to the Castle</button>
         <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
         -->
+        <div>Great Job! You are amazing!</div>
         <button onclick="location.href='index.html'" style="color: crimson;">Start Over</button>
 
     </div>
@@ -63,7 +64,7 @@
     <script src="script.js"></script>
     <script>
     function generateTerm(totalValue) {
-        let firstValue = Math.floor(Math.random() * totalValue) + totalValue;
+        let firstValue = Math.min(Math.floor(Math.random() * totalValue) + totalValue, 9);
         let secondValue = firstValue - totalValue;
         return `${firstValue} - ${secondValue}`;
     }
@@ -74,18 +75,18 @@
 
 
     const cardsArray = [
-             generateCard(10),
-             generateCard(10),
-             generateCard(10),
-             generateCard(10),
-             generateCard(9),
-             generateCard(9),
-             generateCard(9),
-             generateCard(9),
-             generateCard(8),
-             generateCard(8),
-             generateCard(8),
-             generateCard(8),
+             generateCard(4),
+             generateCard(4),
+             generateCard(4),
+             generateCard(4),
+             generateCard(3),
+             generateCard(3),
+             generateCard(3),
+             generateCard(3),
+             generateCard(5),
+             generateCard(5),
+             generateCard(5),
+             generateCard(5),
              generateCard(7),
              generateCard(7),
              generateCard(7),
