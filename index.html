@@ -244,6 +244,14 @@
     </style>
 </head>
 <body>
+
+        <!-- Sound effects -->
+        <audio id="success-sound" src="success.mp3" preload="auto"></audio>
+        <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
+        <audio id="win-sound" src="win.mp3" preload="auto"></audio>
+        <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
+        <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
+
     <div class="counter">Matches: <span id="match-count">0</span></div>
     <div class="timer">Time: <span id="time-remaining">60</span>s</div>
     <div class="game-container">
@@ -270,7 +278,26 @@
         <button onclick="location.href='castle.html'">Travel to the Castle</button>
         <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
     </div>
+
+
+
+
+
+
+
+
     <script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const successSound = document.getElementById('success-sound');
+    const failSound = document.getElementById('fail-sound');
+    const winSound = document.getElementById('win-sound');
+    const tickSound = document.getElementById('tick-sound');
+    const backgroundMusic = document.getElementById('background-music');
+
+        // Play background music
+        backgroundMusic.play();
+
+
         function generateTerm(totalValue) {
             let firstValue = Math.floor(Math.random() * totalValue);
             let secondValue = totalValue - firstValue;
@@ -343,7 +370,7 @@
 
         function initGame() {
             gameContainer.innerHTML = '';
-            gameOverMessage.textContent = '';
+            gameOverMessage.textContent = 'Try Again!';
             gameOverMessage.style.display = 'none';
             winMessage.style.opacity = '0';
             winMessage.style.display = 'none';
@@ -363,20 +390,25 @@
             cardElements.forEach(card => card.addEventListener('click', flipCard));
 
             startTimer();
+            backgroundMusic.play(); // Ensure background music plays when the game starts
         }
 
         function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(() => {
-                if (timeRemaining > 0) {
-                    timeRemaining--;
-                    timeRemainingElement.textContent = timeRemaining;
-                } else {
-                    clearInterval(timer);
-                    endGame();
+        clearInterval(timer);
+        timer = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                timeRemainingElement.textContent = timeRemaining;
+
+                if (timeRemaining < 11) {
+                    tickSound.play();
                 }
-            }, 1000);
-        }
+            } else {
+                clearInterval(timer);
+                endGame();
+            }
+        }, 1000);
+    }
 
         function endGame() {
             gameActive = false;
@@ -408,42 +440,47 @@
         }
 
         function handleMatch(card1, card2) {
-            card1.removeEventListener('click', flipCard);
-            card2.removeEventListener('click', flipCard);
-            card1.classList.add('swirl');
-            card2.classList.add('swirl');
-            updateMatchCounter();
-            setTimeout(() => {
-                card1.style.visibility = 'hidden';
-                card2.style.visibility = 'hidden';
-                resetFlippedCards();
-                boardLocked = false;
-            }, 500);
-        }
+        card1.removeEventListener('click', flipCard);
+        card2.removeEventListener('click', flipCard);
+        card1.classList.add('swirl');
+        card2.classList.add('swirl');
+        updateMatchCounter();
+        successSound.play();
+        setTimeout(() => {
+            card1.style.visibility = 'hidden';
+            card2.style.visibility = 'hidden';
+            resetFlippedCards();
+            boardLocked = false;
+        }, 500);
+    }
 
-        function unflipCards(card1, card2) {
-            setTimeout(() => {
-                card1.classList.remove('flip');
-                card2.classList.remove('flip');
-                resetFlippedCards();
-                boardLocked = false;
-            }, 500);
-        }
+    function unflipCards(card1, card2) {
+        setTimeout(() => {
+            card1.classList.remove('flip');
+            card2.classList.remove('flip');
+            resetFlippedCards();
+            boardLocked = false;
+        }, 500);
+        backgroundMusic.stop();
+        failSound.play();
+    }
 
         function resetFlippedCards() {
             flippedCards = [];
         }
 
         function updateMatchCounter() {
-            matchCount++;
-            matchCountElement.textContent = matchCount;
-            if (matchCount === 10) {
-                triggerConfetti();
-                winMessage.style.display = 'block';
-                winMessage.style.animation = 'fadeInOut 3s forwards';
-                endGame();
-            }
+        matchCount++;
+        matchCountElement.textContent = matchCount;
+        if (matchCount === 10) {
+            triggerConfetti();
+            winMessage.style.display = 'block';
+            winMessage.style.animation = 'fadeInOut 3s forwards';
+            winSound.play();
+            endGame();
+            setTimeout(showWinOverlay, 3000); // Show the overlay after "YOU WIN!" message fades out
         }
+    }
 
         function triggerConfetti() {
             for (let i = 0; i < 100; i++) {
@@ -483,14 +520,15 @@
         }
 
         resetButton.addEventListener('click', () => {
-            winOverlay.style.display = 'none';
-            initGame();
-        });
+        winOverlay.style.display = 'none';
+        initGame();
+        backgroundMusic.play(); // Restart background music
+    });
 
-        readyButton.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            initGame();
-        });
+    readyButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        initGame();
+    });
 
         resetButton.addEventListener('click', initGame);
 
@@ -498,6 +536,9 @@
             overlay.style.display = 'none';
             initGame();
         });
+
+        overlay.style.display = 'flex';
+});
     </script>
 </body>
 </html>
