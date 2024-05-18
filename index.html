@@ -18,27 +18,37 @@
             overflow: hidden;
         }
 
+        .counter, .timer {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 640px;
         }
 
         .memory-game {
-            width: 90vw;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            width: 100%;
             max-width: 640px;
-            display: flex;
-            flex-wrap: wrap;
             perspective: 1000px;
         }
 
         .memory-card {
-            width: calc(25% - 10px);
-            height: 20vw;
-            max-height: 150px;
-            margin: 5px;
             position: relative;
+            width: 100%;
+            padding-bottom: 100%; /* This ensures the card is always a square */
             transform: scale(1);
             transform-style: preserve-3d;
             transition: transform 0.5s;
@@ -78,15 +88,6 @@
         @keyframes swirl {
             0% { transform: rotate(0); }
             100% { transform: rotate(360deg); }
-        }
-
-        .counter, .timer {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
         }
 
         .matched-card {
@@ -212,6 +213,34 @@
                 align-items: flex-start;
             }
         }
+
+        .win-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            z-index: 1001;
+            display: none;
+        }
+
+        .win-overlay button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #2e3d49;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -229,23 +258,26 @@
     <button class="reset-button" id="reset-button">Reset Game</button>
     <div class="confetti" id="confetti"></div>
     <div class="win-message" id="win-message">YOU WIN!</div>
-
     <div class="overlay" id="overlay">
         <div>Get Ready To Match!</div>
         <div>Tap Tiles that will equal the same number to make a match!</div>
+        <div>Solve quickly for a secret path!</div>
         <button id="ready-button">I'm Ready!</button>
     </div>
 
+    <div class="win-overlay" id="win-overlay">
+        <button onclick="location.href='forest.html'">Travel to the Forest</button>
+        <button onclick="location.href='castle.html'">Travel to the Castle</button>
+        <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
+    </div>
     <script>
-        function generateTerm (totalValue) {
-            firstValue = Math.random() * (totalValue);
-            firstValue = Math.round(firstValue);
-            secondValue = totalValue - firstValue;
-            termName = firstValue.toString() + '+' + secondValue.toString();
-            return termName;
+        function generateTerm(totalValue) {
+            let firstValue = Math.floor(Math.random() * totalValue);
+            let secondValue = totalValue - firstValue;
+            return `${firstValue} + ${secondValue}`;
         };
 
-        function generateCard (value_) {
+        function generateCard(value_) {
             return { term: generateTerm(value_), value: value_ };
         };
 
@@ -410,7 +442,6 @@
                 winMessage.style.display = 'block';
                 winMessage.style.animation = 'fadeInOut 3s forwards';
                 endGame();
-
             }
         }
 
@@ -428,6 +459,38 @@
                 winMessage.style.display = 'none';
             }, 3000); // Duration of confetti animation
         }
+
+        const winOverlay = document.getElementById('win-overlay');
+        const secretButton = document.getElementById('secret-button');
+
+        function updateMatchCounter() {
+            matchCount++;
+            matchCountElement.textContent = matchCount;
+            if (matchCount === 10) {
+                triggerConfetti();
+                winMessage.style.display = 'block';
+                winMessage.style.animation = 'fadeInOut 3s forwards';
+                endGame();
+                setTimeout(showWinOverlay, 3000); // Show the overlay after "YOU WIN!" message fades out
+            }
+        }
+
+        function showWinOverlay() {
+            if (timeRemaining > 20) {
+                secretButton.style.display = 'block';
+            }
+            winOverlay.style.display = 'flex';
+        }
+
+        resetButton.addEventListener('click', () => {
+            winOverlay.style.display = 'none';
+            initGame();
+        });
+
+        readyButton.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            initGame();
+        });
 
         resetButton.addEventListener('click', initGame);
 
