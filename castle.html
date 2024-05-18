@@ -62,17 +62,30 @@
 
     <script src="script.js"></script>
     <script>
-            function generateTerm(totalValue) {
-            let firstValue = Math.floor(Math.random() * totalValue);
-            let secondValue = totalValue - firstValue;
-            return `${secondValue} + ${firstValue}`;
-        };
+    function generateTerm(totalValue) {
+        let firstValue = Math.floor(Math.random() * totalValue) + totalValue;
+        let secondValue = firstValue - totalValue;
+        return `${firstValue} - ${secondValue}`;
+    }
 
-        function generateCard(value_) {
-            return { term: generateTerm(value_), value: value_ };
-        };
+    function generateCard(value_) {
+        return { term: generateTerm(value_), value: value_ };
+    }
 
-        const cardsArray = [
+
+    const cardsArray = [
+             generateCard(10),
+             generateCard(10),
+             generateCard(10),
+             generateCard(10),
+             generateCard(9),
+             generateCard(9),
+             generateCard(9),
+             generateCard(9),
+             generateCard(8),
+             generateCard(8),
+             generateCard(8),
+             generateCard(8),
              generateCard(7),
              generateCard(7),
              generateCard(7),
@@ -80,20 +93,8 @@
              generateCard(6),
              generateCard(6),
              generateCard(6),
-             generateCard(6),
-             generateCard(5),
-             generateCard(5),
-             generateCard(5),
-             generateCard(5),
-             generateCard(4),
-             generateCard(4),
-             generateCard(4),
-             generateCard(4),
-             generateCard(3),
-             generateCard(3),
-             generateCard(3),
-             generateCard(3)
+             generateCard(6)
         ];
-</script>
+    </script>
 </body>
 </html>
