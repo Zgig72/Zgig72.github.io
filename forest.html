@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Matching Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background: url('forestbackground.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+}
+</style>
+<body>
+
+    <!-- Sound effects -->
+    <audio id="success-sound" src="success.mp3" preload="auto"></audio>
+    <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="win.mp3" preload="auto"></audio>
+    <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
+    <audio id="background-music" src="forestbackground.mp3" preload="auto" loop></audio>
+
+    <div class="counter">Matches: <span id="match-count">0</span></div>
+    <div class="timer">Time: <span id="time-remaining">60</span>s</div>
+    <div class="game-container">
+        <div class="memory-game">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+        <div class="matched-stack">
+            <!-- Matched cards will be moved here -->
+        </div>
+    </div>
+    <div class="game-over" id="game-over-message"></div>
+    <button class="reset-button" id="reset-button">Reset Game</button>
+    <div class="confetti" id="confetti"></div>
+    <div class="win-message" id="win-message">YOU WIN!</div>
+    <div class="overlay" id="overlay">
+        <div>Get Ready To Match!</div>
+        <div>Tap Tiles that will equal the same number to make a match!</div>
+        <div>Solve quickly for a secret path!</div>
+        <button id="ready-button">I'm Ready!</button>
+    </div>
+
+    <div class="win-overlay" id="win-overlay">
+        <!--
+        <button onclick="location.href='forest.html'">Travel to the Forest</button>
+        <button onclick="location.href='castle.html'">Travel to the Castle</button>
+        <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
+        -->
+        <button onClick="window.location.reload();" style="color: crimson;">Start Over</button>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+            function generateTerm(totalValue) {
+            let firstValue = Math.floor(Math.random() * totalValue);
+            let secondValue = totalValue - firstValue;
+            return `${secondValue} + ${firstValue}`;
+        };
+
+        function generateCard(value_) {
+            return { term: generateTerm(value_), value: value_ };
+        };
+
+        const cardsArray = [
+             generateCard(10),
+             generateCard(10),
+             generateCard(10),
+             generateCard(10),
+             generateCard(9),
+             generateCard(9),
+             generateCard(9),
+             generateCard(9),
+             generateCard(8),
+             generateCard(8),
+             generateCard(8),
+             generateCard(8),
+             generateCard(7),
+             generateCard(7),
+             generateCard(7),
+             generateCard(7),
+             generateCard(6),
+             generateCard(6),
+             generateCard(6),
+             generateCard(6)
+        ];
+</script>
+</body>
+</html>

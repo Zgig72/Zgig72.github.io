@@ -4,253 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memory Matching Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            background: url('background.png') no-repeat center center fixed;
-            background-size: cover;
-            overflow: hidden;
-        }
-
-        .counter, .timer {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 640px;
-        }
-
-        .memory-game {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
-            width: 100%;
-            max-width: 640px;
-            perspective: 1000px;
-        }
-
-        .memory-card {
-            position: relative;
-            width: 100%;
-            padding-bottom: 100%; /* This ensures the card is always a square */
-            transform: scale(1);
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
-        }
-
-        .memory-card.flip {
-            transform: rotateY(180deg);
-        }
-
-        .memory-card .front, .memory-card .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            cursor: pointer;
-        }
-
-        .memory-card .front {
-            background: #fff;
-        }
-
-        .memory-card .back {
-            background: #2e3d49;
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .memory-card.swirl {
-            animation: swirl 0.5s forwards;
-        }
-
-        @keyframes swirl {
-            0% { transform: rotate(0); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .matched-card {
-            width: 100%;
-            height: 50px;
-            margin-bottom: 5px;
-            background-color: #2e3d49;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-        }
-
-        .game-over {
-            font-size: 3em;
-            color: white;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .reset-button {
-            font-size: 1em;
-            padding: 10px 20px;
-            margin-top: 20px;
-            cursor: pointer;
-            border: none;
-            background-color: #2e3d49;
-            color: white;
-            border-radius: 5px;
-        }
-
-        .confetti {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .confetti-piece {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            opacity: 0;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            0% {
-                opacity: 1;
-                transform: translateY(0) rotate(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(720deg);
-            }
-        }
-
-        .win-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4em;
-            color: white;
-            font-weight: bold;
-            opacity: 0;
-            display: none;
-            animation: fadeInOut 3s forwards;
-            text-align: center;
-        }
-
-        @keyframes fadeInOut {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(1.5);
-            }
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .overlay button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #2e3d49;
-            color: white;
-        }
-
-        @media (min-width: 768px) {
-            .game-container {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-        }
-
-        .win-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-            text-align: center;
-            z-index: 1001;
-            display: none;
-        }
-
-        .win-overlay button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #2e3d49;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+}
+</style>
 <body>
 
-        <!-- Sound effects -->
-        <audio id="success-sound" src="success.mp3" preload="auto"></audio>
-        <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
-        <audio id="win-sound" src="win.mp3" preload="auto"></audio>
-        <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
-        <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
+    <!-- Sound effects -->
+    <audio id="success-sound" src="success.mp3" preload="auto"></audio>
+    <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="win.mp3" preload="auto"></audio>
+    <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
+    <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
 
     <div class="counter">Matches: <span id="match-count">0</span></div>
     <div class="timer">Time: <span id="time-remaining">60</span>s</div>
@@ -277,31 +54,18 @@
         <button onclick="location.href='forest.html'">Travel to the Forest</button>
         <button onclick="location.href='castle.html'">Travel to the Castle</button>
         <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
+        <button onClick="window.location.reload();" style="color: crimson;">Start Over</button>
+
     </div>
 
+    <script src="script.js"></script>
+</body>
 
-
-
-
-
-
-
-    <script>
-document.addEventListener('DOMContentLoaded', (event) => {
-    const successSound = document.getElementById('success-sound');
-    const failSound = document.getElementById('fail-sound');
-    const winSound = document.getElementById('win-sound');
-    const tickSound = document.getElementById('tick-sound');
-    const backgroundMusic = document.getElementById('background-music');
-
-        // Play background music
-        backgroundMusic.play();
-
-
-        function generateTerm(totalValue) {
+<script>
+            function generateTerm(totalValue) {
             let firstValue = Math.floor(Math.random() * totalValue);
             let secondValue = totalValue - firstValue;
-            return `${firstValue} + ${secondValue}`;
+            return `${secondValue} + ${firstValue}`;
         };
 
         function generateCard(value_) {
@@ -330,215 +94,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
              generateCard(1),
              generateCard(1)
         ];
-
-        const gameContainer = document.querySelector('.memory-game');
-        const matchCountElement = document.getElementById('match-count');
-        const timeRemainingElement = document.getElementById('time-remaining');
-        const gameOverMessage = document.getElementById('game-over-message');
-        const resetButton = document.getElementById('reset-button');
-        const confettiContainer = document.getElementById('confetti');
-        const winMessage = document.getElementById('win-message');
-        const overlay = document.getElementById('overlay');
-        const readyButton = document.getElementById('ready-button');
-        let cardElements = [];
-        let matchCount = 0;
-        let timer;
-        let timeRemaining = 60;
-        let gameActive = false;
-        let flippedCards = [];
-        let boardLocked = false;
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function createCard(term, value) {
-            const card = document.createElement('div');
-            card.classList.add('memory-card');
-            card.dataset.term = term;
-            card.dataset.value = value;
-            card.innerHTML = `
-                <div class="front">${term}</div>
-                <div class="back">${value}</div>
-            `;
-            return card;
-        }
-
-        function initGame() {
-            gameContainer.innerHTML = '';
-            gameOverMessage.textContent = 'Try Again!';
-            gameOverMessage.style.display = 'none';
-            winMessage.style.opacity = '0';
-            winMessage.style.display = 'none';
-            gameActive = true;
-            matchCount = 0;
-            matchCountElement.textContent = matchCount;
-            timeRemaining = 60;
-            timeRemainingElement.textContent = timeRemaining;
-
-            const doubledCardsArray = shuffle([...cardsArray]);
-            doubledCardsArray.forEach(card => {
-                const cardElement = createCard(card.term, card.value);
-                gameContainer.appendChild(cardElement);
-            });
-
-            cardElements = document.querySelectorAll('.memory-card');
-            cardElements.forEach(card => card.addEventListener('click', flipCard));
-
-            startTimer();
-            backgroundMusic.play(); // Ensure background music plays when the game starts
-        }
-
-        function startTimer() {
-        clearInterval(timer);
-        timer = setInterval(() => {
-            if (timeRemaining > 0) {
-                timeRemaining--;
-                timeRemainingElement.textContent = timeRemaining;
-
-                if (timeRemaining < 11) {
-                    tickSound.play();
-                }
-            } else {
-                clearInterval(timer);
-                endGame();
-            }
-        }, 1000);
-    }
-
-        function endGame() {
-            gameActive = false;
-            cardElements.forEach(card => card.removeEventListener('click', flipCard));
-            gameOverMessage.textContent = `Matches: ${matchCount}`;
-        }
-
-        function flipCard() {
-            if (!gameActive || boardLocked) return;
-            if (this.classList.contains('flip') || flippedCards.includes(this)) return;
-
-            this.classList.add('flip');
-            flippedCards.push(this);
-
-            if (flippedCards.length === 2) {
-                boardLocked = true;
-                setTimeout(checkForMatch, 250);
-            }
-        }
-
-        function checkForMatch() {
-            const [card1, card2] = flippedCards;
-            const isMatch = card1.dataset.term === card2.dataset.term || card1.dataset.value === card2.dataset.value;
-            if (isMatch) {
-                handleMatch(card1, card2);
-            } else {
-                unflipCards(card1, card2);
-            }
-        }
-
-        function handleMatch(card1, card2) {
-        card1.removeEventListener('click', flipCard);
-        card2.removeEventListener('click', flipCard);
-        card1.classList.add('swirl');
-        card2.classList.add('swirl');
-        updateMatchCounter();
-        successSound.play();
-        setTimeout(() => {
-            card1.style.visibility = 'hidden';
-            card2.style.visibility = 'hidden';
-            resetFlippedCards();
-            boardLocked = false;
-        }, 500);
-    }
-
-    function unflipCards(card1, card2) {
-        setTimeout(() => {
-            card1.classList.remove('flip');
-            card2.classList.remove('flip');
-            resetFlippedCards();
-            boardLocked = false;
-        }, 500);
-        backgroundMusic.stop();
-        failSound.play();
-    }
-
-        function resetFlippedCards() {
-            flippedCards = [];
-        }
-
-        function updateMatchCounter() {
-        matchCount++;
-        matchCountElement.textContent = matchCount;
-        if (matchCount === 10) {
-            triggerConfetti();
-            winMessage.style.display = 'block';
-            winMessage.style.animation = 'fadeInOut 3s forwards';
-            winSound.play();
-            endGame();
-            setTimeout(showWinOverlay, 3000); // Show the overlay after "YOU WIN!" message fades out
-        }
-    }
-
-        function triggerConfetti() {
-            for (let i = 0; i < 100; i++) {
-                const confettiPiece = document.createElement('div');
-                confettiPiece.classList.add('confetti-piece');
-                confettiPiece.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                confettiPiece.style.left = `${Math.random() * 100}vw`;
-                confettiPiece.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                confettiContainer.appendChild(confettiPiece);
-            }
-            setTimeout(() => {
-                confettiContainer.innerHTML = '';
-                winMessage.style.display = 'none';
-            }, 3000); // Duration of confetti animation
-        }
-
-        const winOverlay = document.getElementById('win-overlay');
-        const secretButton = document.getElementById('secret-button');
-
-        function updateMatchCounter() {
-            matchCount++;
-            matchCountElement.textContent = matchCount;
-            if (matchCount === 10) {
-                triggerConfetti();
-                winMessage.style.display = 'block';
-                winMessage.style.animation = 'fadeInOut 3s forwards';
-                endGame();
-                setTimeout(showWinOverlay, 3000); // Show the overlay after "YOU WIN!" message fades out
-            }
-        }
-
-        function showWinOverlay() {
-            if (timeRemaining > 20) {
-                secretButton.style.display = 'block';
-            }
-            winOverlay.style.display = 'flex';
-        }
-
-        resetButton.addEventListener('click', () => {
-        winOverlay.style.display = 'none';
-        initGame();
-        backgroundMusic.play(); // Restart background music
-    });
-
-    readyButton.addEventListener('click', () => {
-        overlay.style.display = 'none';
-        initGame();
-    });
-
-        resetButton.addEventListener('click', initGame);
-
-        readyButton.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            initGame();
-        });
-
-        overlay.style.display = 'flex';
-});
-    </script>
-</body>
+</script>
 </html>
