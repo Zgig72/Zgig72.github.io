@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         function triggerConfetti() {
             for (let i = 0; i < 100; i++) {
+                winSound.play();
                 const confettiPiece = document.createElement('div');
                 confettiPiece.classList.add('confetti-piece');
                 confettiPiece.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
