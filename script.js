@@ -147,20 +147,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             flippedCards = [];
         }
 
-        function updateMatchCounter() {
-        matchCount++;
-        matchCountElement.textContent = matchCount;
-        if (matchCount === 10) {
-            clearInterval(timer);
-            triggerConfetti();
-            winMessage.style.display = 'block';
-            winMessage.style.animation = 'fadeInOut 3s forwards';
-            winSound.play();
-            endGame();
-            setTimeout(showWinOverlay, 3000); // Show the overlay after "YOU WIN!" message fades out
-        }
-    }
-
         function triggerConfetti() {
             for (let i = 0; i < 100; i++) {
                 const confettiPiece = document.createElement('div');
@@ -183,6 +169,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             matchCount++;
             matchCountElement.textContent = matchCount;
             if (matchCount === 10) {
+                clearInterval(timer);
                 triggerConfetti();
                 winMessage.style.display = 'block';
                 winMessage.style.animation = 'fadeInOut 3s forwards';
