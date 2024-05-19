@@ -1,15 +1,4 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    background: url('background.png') no-repeat center center fixed;
-    background-size: cover;
-    overflow: hidden;
-}
+
 
 .counter, .timer {
     font-size: 1.5em;
@@ -112,6 +101,7 @@ body {
     color: white;
     border-radius: 5px;
 }
+
 
 .confetti {
     position: absolute;

@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         matchCount++;
         matchCountElement.textContent = matchCount;
         if (matchCount === 10) {
+            clearInterval(timer);
             triggerConfetti();
             winMessage.style.display = 'block';
             winMessage.style.animation = 'fadeInOut 3s forwards';

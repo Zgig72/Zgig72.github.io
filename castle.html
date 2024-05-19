@@ -19,6 +19,11 @@
     background-size: cover;
     overflow: hidden;
 }
+
+    #secret-button {
+    display: none;
+}
+
 </style>
 <body>
 
@@ -46,7 +51,6 @@
     <div class="overlay" id="overlay">
         <div>Get Ready To Match!</div>
         <div>Tap Tiles that will equal the same number to make a match!</div>
-        <div>Solve quickly for a secret path!</div>
         <button id="ready-button">I'm Ready!</button>
     </div>
 
@@ -56,7 +60,7 @@
         <button onclick="location.href='castle.html'">Travel to the Castle</button>
         <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
         -->
-        <button id="secret-button" onclick="return false;" style="display:none;">You are so fast!</button>
+        <button id="secret-button" style="display:none;">You are so fast!</button>
         Great Job! You are amazing!
         <button onclick="location.href='index.html'" style="color: crimson;">Start Over</button>
 
