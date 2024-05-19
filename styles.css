@@ -1,5 +1,3 @@
-
-
 .counter, .timer {
     font-size: 1.5em;
     margin-bottom: 10px;
@@ -20,7 +18,7 @@
 
 .memory-game {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Adjusted min-width for mobile */
     gap: 10px;
     width: 100%;
     max-width: 640px;
@@ -49,7 +47,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
+    font-size: 1.5em; /* Adjusted font size for mobile */
     cursor: pointer;
 }
 
@@ -85,7 +83,7 @@
 }
 
 .game-over {
-    font-size: 3em;
+    font-size: 2em; /* Adjusted font size for mobile */
     color: white;
     margin-top: 20px;
     text-align: center;
@@ -101,7 +99,6 @@
     color: white;
     border-radius: 5px;
 }
-
 
 .confetti {
     position: absolute;
@@ -139,7 +136,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 4em;
+    font-size: 2.5em; /* Adjusted font size for mobile */
     color: white;
     font-weight: bold;
     opacity: 0;
@@ -194,6 +191,22 @@
     .game-container {
         flex-direction: row;
         align-items: flex-start;
+    }
+
+    .memory-game {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .memory-card .front, .memory-card .back {
+        font-size: 2em;
+    }
+
+    .game-over {
+        font-size: 3em;
+    }
+
+    .win-message {
+        font-size: 4em;
     }
 }
 
