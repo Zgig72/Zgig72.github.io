@@ -45,7 +45,10 @@
         </div>
     </div>
     <div class="game-over" id="game-over-message"></div>
-    <button class="reset-button" id="reset-button">Reset Game</button>
+    <div class="button-container">
+        <button class="reset-button" id="reset-button">Reset Puzzle</button>
+        <button class="reset-button" style="color: crimson;" id="new-game-button" onClick="location.href='index.html';">New Game</button>
+    </div>
     <div class="confetti" id="confetti"></div>
     <div class="win-message" id="win-message">YOU WIN!</div>
     <div class="overlay" id="overlay">
@@ -55,14 +58,10 @@
     </div>
 
     <div class="win-overlay" id="win-overlay">
-        <!--
-        <button onclick="location.href='forest.html'">Travel to the Forest</button>
+        <button onclick="location.href='index.html'">Travel back to the Starting Path</button>
         <button onclick="location.href='castle.html'">Travel to the Castle</button>
         <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
-        -->
-        <button id="secret-button" style="display: none;">You are so fast!</button>
-        Great Job! You are amazing! 
-        <button onclick="location.href='index.html'" style="color: crimson;">Start Over</button>
+        <button onclick="location.href='index.html'" style="color: crimson;">New Game</button>
 
     </div>
 
