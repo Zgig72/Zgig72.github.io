@@ -30,7 +30,7 @@
     <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
 
     <div class="counter">Matches: <span id="match-count">0</span></div>
-    <div class="timer">Time: <span id="time-remaining">60</span>s</div>
+    <div class="timer">Time: <span id="time-remaining">0</span>s</div>
     <div class="game-container">
         <div class="memory-game">
             <!-- Cards will be dynamically generated here -->
@@ -39,6 +39,14 @@
             <!-- Matched cards will be moved here -->
         </div>
     </div>
+<!--
+   <div class="side-panel">
+       <h2>Best Times</h2>
+        <ul class="best-times-list">
+             Best times for each page will be listed here 
+        </ul>
+    </div>
+-->
     <div class="game-over" id="game-over-message"></div>
     <button class="reset-button" id="reset-button">Reset Game</button>
     <div class="confetti" id="confetti"></div>
@@ -46,7 +54,7 @@
     <div class="overlay" id="overlay">
         <div>Get Ready To Match!</div>
         <div>Tap Tiles that will equal the same number to make a match!</div>
-        <div>Solve quickly for a secret path!</div>
+        <div>Solve in less that 40 seconds for a secret path!</div>
         <button id="ready-button">I'm Ready!</button>
     </div>
 
@@ -94,5 +102,6 @@
              generateCard(1),
              generateCard(1)
         ];
+        let page = "Path (Level 1)";
 </script>
 </html>

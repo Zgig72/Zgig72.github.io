@@ -22,10 +22,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         let cardElements = [];
         let matchCount = 0;
         let timer;
-        let timeRemaining = 60;
+        let timeRemaining = 0;
         let gameActive = false;
         let flippedCards = [];
         let boardLocked = false;
+        
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             gameActive = true;
             matchCount = 0;
             matchCountElement.textContent = matchCount;
-            timeRemaining = 60;
+            timeRemaining =0;
             timeRemainingElement.textContent = timeRemaining;
 
             const doubledCardsArray = shuffle([...cardsArray]);
@@ -72,16 +73,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
             backgroundMusic.play(); // Ensure background music plays when the game starts
         }
 
+        
         function startTimer() {
         clearInterval(timer);
         timer = setInterval(() => {
-            if (timeRemaining > 0) {
-                timeRemaining--;
+            if (timeRemaining => 0) {
+                timeRemaining++;
                 timeRemainingElement.textContent = timeRemaining;
-
-                if (timeRemaining < 11) {
-                    tickSound.play();
-                }
             } else {
                 clearInterval(timer);
                 endGame();
@@ -170,6 +168,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             matchCount++;
             matchCountElement.textContent = matchCount;
             if (matchCount === 10) {
+                //saveTimerValue(page, timeRemaining);
                 clearInterval(timer);
                 triggerConfetti();
                 winMessage.style.display = 'block';
@@ -179,8 +178,57 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
 
+
+
+
+
+
+/*
+// Function to save the timer value to localStorage
+function saveTimerValue(page, timer) {
+    let bestTimes = JSON.parse(localStorage.getItem('bestTimes')) || {};
+    if (!bestTimes[page] || timer < bestTimes[page]) {
+        bestTimes[page] = timer;
+    }
+    localStorage.setItem('bestTimes', JSON.stringify(bestTimes));
+    displayBestTimes();
+}
+
+// Function to get the timer value from localStorage
+function getTimerValue(page) {
+    let bestTimes = JSON.parse(localStorage.getItem('bestTimes')) || {};
+    return bestTimes[page] || 0;
+}
+
+// Function to display best times in the side panel
+function displayBestTimes() {
+    const bestTimesList = document.querySelector('.best-times-list');
+    bestTimesList.innerHTML = '';
+    let bestTimes = JSON.parse(localStorage.getItem('bestTimes')) || {};
+    for (let page in bestTimes) {
+        let li = document.createElement('li');
+        li.textContent = `Page ${page}: ${bestTimes[page]}s`;
+        bestTimesList.appendChild(li);
+    }
+}
+
+// On page load, retrieve and display the best times
+document.addEventListener('DOMContentLoaded', () => {
+    const page = window.location.pathname; // Use pathname as page identifier
+    displayBestTimes();
+    let timerObj = startTimer(page);
+
+    // Add event listener for reset button
+    document.querySelector('.reset-button').addEventListener('click', () => {
+        timerObj = resetTimer(timerObj, page);
+    });
+});
+
+displayBestTimes();
+*/
+
         function showWinOverlay() {
-            if (timeRemaining > 20) {
+            if (timeRemaining < 40) {
                 secretButton.style.display = 'block';
             }
             winOverlay.style.display = 'flex';
