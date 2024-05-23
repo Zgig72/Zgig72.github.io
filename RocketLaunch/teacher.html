@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher - Memory Game</title>
-  <link rel="stylesheet" href="styles.css">
   <style>
     .card {
       width: 100px;
@@ -29,7 +28,7 @@
   <div id="game-board"></div>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
   <script>
-    const peer = new Peer();
+    let peer;
     let connections = [];
     let matches = 0;
     const cards = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'];
@@ -58,36 +57,37 @@
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    peer.on('open', id => {
-      console.log(`Peer ID (Teacher) opened: ${id}`);
-      document.getElementById('host-button').onclick = () => {
-        const code = generateCode();
-        document.getElementById('host-code').textContent = `Game Code: ${code}`;
-        peer.id = code;  // Correctly set the peer ID
-        console.log(`Generated Game Code (Peer ID): ${peer.id}`);
-      };
-    });
+    document.getElementById('host-button').onclick = () => {
+      const code = generateCode();
+      peer = new Peer(code);  // Manually set the PeerJS ID to the generated code
+      document.getElementById('host-code').textContent = `Game Code: ${code}`;
+      console.log(`Generated Game Code (Peer ID): ${code}`);
 
-    peer.on('connection', conn => {
-      connections.push(conn);
-      console.log('New connection:', conn);
-      conn.on('data', data => {
-        if (data.type === 'match') {
-          matches += 1;
-          document.getElementById('matches').textContent = matches;
-        } else if (data.type === 'join') {
-          const studentName = data.name || 'Unknown Device';
-          const li = document.createElement('li');
-          li.textContent = studentName;
-          document.getElementById('students-list').appendChild(li);
-          console.log(`Student joined: ${studentName}`);
-        }
+      peer.on('open', id => {
+        console.log(`Peer ID (Teacher) opened: ${id}`);
       });
-    });
 
-    peer.on('error', err => {
-      console.error('Peer error:', err);
-    });
+      peer.on('connection', conn => {
+        connections.push(conn);
+        console.log('New connection:', conn);
+        conn.on('data', data => {
+          if (data.type === 'match') {
+            matches += 1;
+            document.getElementById('matches').textContent = matches;
+          } else if (data.type === 'join') {
+            const studentName = data.name || 'Unknown Device';
+            const li = document.createElement('li');
+            li.textContent = studentName;
+            document.getElementById('students-list').appendChild(li);
+            console.log(`Student joined: ${studentName}`);
+          }
+        });
+      });
+
+      peer.on('error', err => {
+        console.error('Peer error:', err);
+      });
+    };
 
     createBoard();
   </script>
