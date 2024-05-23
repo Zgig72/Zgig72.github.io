@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student - Memory Game</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
     /* Add your CSS styling here */
     .card {
@@ -20,6 +21,7 @@
   </style>
 </head>
 <body>
+  <script src="script.js"></script>
   <h1>Student's Memory Game</h1>
   <input type="text" id="game-code" placeholder="Enter Game Code">
   <button id="join-button">Join Game</button>
@@ -33,11 +35,13 @@
       const gameCode = document.getElementById('game-code').value;
       if (gameCode) {
         const conn = peer.connect(gameCode);
+        console.log(`Attempting to connect to: ${gameCode}`);
 
         conn.on('open', () => {
           const deviceName = navigator.userAgent;
           conn.send({ type: 'join', name: deviceName });
           document.getElementById('join-status').textContent = 'Joined successfully!';
+          console.log('Connected to teacher');
         });
 
         conn.on('data', data => {
@@ -47,14 +51,19 @@
         });
 
         conn.on('error', err => {
-          document.getElementById('join-status').textContent = 'Failed to join: ' + err;
+          document.getElementById('join-status').textContent = 'Failed to join: ' + err.message;
+          console.error('Connection error:', err);
         });
       } else {
         document.getElementById('join-status').textContent = 'Please enter a game code.';
       }
     };
 
-    // Additional game logic here
+    peer.on('error', err => {
+      console.error('Peer error:', err);
+    });
+
+  
   </script>
 </body>
 </html>
