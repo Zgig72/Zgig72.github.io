@@ -28,30 +28,31 @@
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
   <script>
     const peer = new Peer();
-    let conn;
 
     document.getElementById('join-button').onclick = () => {
       const gameCode = document.getElementById('game-code').value;
-      conn = peer.connect(gameCode);
+      if (gameCode) {
+        const conn = peer.connect(gameCode);
 
-      conn.on('open', () => {
-        const deviceName = navigator.userAgent;
-        conn.send({ type: 'join', name: deviceName });
-        document.getElementById('join-status').textContent = 'Joined successfully!';
-      });
+        conn.on('open', () => {
+          const deviceName = navigator.userAgent;
+          conn.send({ type: 'join', name: deviceName });
+          document.getElementById('join-status').textContent = 'Joined successfully!';
+        });
 
-      conn.on('data', data => {
-        if (data.type === 'match') {
-          // Handle match data if needed
-        }
-      });
-    };
+        conn.on('data', data => {
+          if (data.type === 'match') {
+            // Handle match data if needed
+          }
+        });
 
-    function sendMatch() {
-      if (conn && conn.open) {
-        conn.send({ type: 'match' });
+        conn.on('error', err => {
+          document.getElementById('join-status').textContent = 'Failed to join: ' + err;
+        });
+      } else {
+        document.getElementById('join-status').textContent = 'Please enter a game code.';
       }
-    }
+    };
 
     // Additional game logic here
   </script>

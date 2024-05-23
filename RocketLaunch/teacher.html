@@ -54,6 +54,10 @@
       // Implement flip card logic here
     }
 
+    function generateCode() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
     peer.on('open', id => {
       document.getElementById('host-button').onclick = () => {
         const code = generateCode();
@@ -76,10 +80,6 @@
         }
       });
     });
-
-    function generateCode() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
-    }
 
     createBoard();
   </script>
