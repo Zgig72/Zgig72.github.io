@@ -3,55 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teacher - Memory Game</title>
+  <title>Launch Pad</title>
   <style>
-    .card {
-      width: 100px;
-      height: 150px;
-      background-color: #ccc;
-      display: inline-block;
-      margin: 10px;
-      text-align: center;
-      line-height: 150px;
-      font-size: 24px;
-      cursor: pointer;
-    }
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background: url('teacherbackground.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+}
+
+
+
+
+
+
   </style>
 </head>
 <body>
-  <h1>Teacher's Memory Game</h1>
+  <h1>Launch Pad</h1>
   <button id="host-button">Host Game</button>
   <p id="host-code"></p>
   <p>Matches: <span id="matches">0</span></p>
   <p>Students Joined:</p>
   <ul id="students-list"></ul>
-  <div id="game-board"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
   <script>
     let peer;
     let connections = [];
     let matches = 0;
-    const cards = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'];
-
-    function shuffle(array) {
-      array.sort(() => Math.random() - 0.5);
-    }
-
-    function createBoard() {
-      shuffle(cards);
-      const gameBoard = document.getElementById('game-board');
-      cards.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.classList.add('card');
-        cardElement.dataset.value = card;
-        cardElement.addEventListener('click', flipCard);
-        gameBoard.appendChild(cardElement);
-      });
-    }
-
-    function flipCard() {
-      // Implement flip card logic here
-    }
 
     function generateCode() {
       return Math.floor(100000 + Math.random() * 900000).toString();
@@ -89,7 +88,6 @@
       });
     };
 
-    createBoard();
   </script>
 </body>
 </html>
