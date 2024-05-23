@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher - Memory Game</title>
+  <style>
+    /* Add your CSS styling here */
+    .card {
+      width: 100px;
+      height: 150px;
+      background-color: #ccc;
+      display: inline-block;
+      margin: 10px;
+      text-align: center;
+      line-height: 150px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Teacher's Memory Game</h1>
+  <button id="host-button">Host Game</button>
+  <p id="host-code"></p>
+  <p>Matches: <span id="matches">0</span></p>
+  <p>Students Joined:</p>
+  <ul id="students-list"></ul>
+  <div id="game-board"></div>
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+  <script>
+    const peer = new Peer();
+    let connections = [];
+    let matches = 0;
+    const cards = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'];
+
+    function shuffle(array) {
+      array.sort(() => Math.random() - 0.5);
+    }
+
+    function createBoard() {
+      shuffle(cards);
+      const gameBoard = document.getElementById('game-board');
+      cards.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.dataset.value = card;
+        cardElement.addEventListener('click', flipCard);
+        gameBoard.appendChild(cardElement);
+      });
+    }
+
+    function flipCard() {
+      // Implement flip card logic here
+    }
+
+    peer.on('open', id => {
+      document.getElementById('host-button').onclick = () => {
+        const code = generateCode();
+        document.getElementById('host-code').textContent = `Game Code: ${code}`;
+        peer.id = code;
+      };
+    });
+
+    peer.on('connection', conn => {
+      connections.push(conn);
+      conn.on('data', data => {
+        if (data.type === 'match') {
+          matches += 1;
+          document.getElementById('matches').textContent = matches;
+        } else if (data.type === 'join') {
+          const studentName = data.name || 'Unknown Device';
+          const li = document.createElement('li');
+          li.textContent = studentName;
+          document.getElementById('students-list').appendChild(li);
+        }
+      });
+    });
+
+    function generateCode() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>
