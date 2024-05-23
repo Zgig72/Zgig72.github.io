@@ -6,45 +6,6 @@
   <title>Teacher - Memory Game</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-}
-
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(4, 100px);
-    grid-gap: 10px;
-}
-
-.card {
-    width: 100px;
-    height: 100px;
-    background-color: #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.card.flipped {
-    background-color: #fff;
-}
-
-#host-container, #join-container {
-    margin-bottom: 20px;
-}
-
-#host-code {
-    font-size: 1.5em;
-}
-
     .card {
       width: 100px;
       height: 150px;
@@ -98,15 +59,18 @@
     }
 
     peer.on('open', id => {
+      console.log(`Peer ID (Teacher) opened: ${id}`);
       document.getElementById('host-button').onclick = () => {
         const code = generateCode();
         document.getElementById('host-code').textContent = `Game Code: ${code}`;
-        peer.id = code;
+        peer.id = code;  // Correctly set the peer ID
+        console.log(`Generated Game Code (Peer ID): ${peer.id}`);
       };
     });
 
     peer.on('connection', conn => {
       connections.push(conn);
+      console.log('New connection:', conn);
       conn.on('data', data => {
         if (data.type === 'match') {
           matches += 1;
@@ -116,8 +80,13 @@
           const li = document.createElement('li');
           li.textContent = studentName;
           document.getElementById('students-list').appendChild(li);
+          console.log(`Student joined: ${studentName}`);
         }
       });
+    });
+
+    peer.on('error', err => {
+      console.error('Peer error:', err);
     });
 
     createBoard();
