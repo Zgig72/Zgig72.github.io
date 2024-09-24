@@ -3,83 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mission Control</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    background: url('studentbackground.png') no-repeat center center fixed;
-    background-size: cover;
-    overflow: hidden;
-}
-</style>
+  <title>Student - Memory Game</title>
+  <style>
+    .card {
+      width: 100px;
+      height: 150px;
+      background-color: #ccc;
+      display: inline-block;
+      margin: 10px;
+      text-align: center;
+      line-height: 150px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h1>Mission Control</h1>
+  <h1>Student's Memory Game</h1>
   <input type="text" id="game-code" placeholder="Enter Game Code">
   <button id="join-button">Join Game</button>
   <p id="join-status"></p>
-
-
-
-    <!-- Sound effects -->
-    <audio id="success-sound" src="success.mp3" preload="auto"></audio>
-    <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
-    <audio id="win-sound" src="win.mp3" preload="auto"></audio>
-    <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
-    <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
-
-    <div class="counter">Matches: <span id="match-count">0</span></div>
-    <div class="timer">Time: <span id="time-remaining">0</span>s</div>
-    <div class="game-container">
-        <div class="memory-game">
-            <!-- Cards will be dynamically generated here -->
-        </div>
-        <div class="matched-stack">
-            <!-- Matched cards will be moved here -->
-        </div>
-    </div>
-
-    <div class="game-over" id="game-over-message"></div>
-    <div class="button-container">
-        <button class="reset-button" id="reset-button">Reset Puzzle</button>
-        <button class="reset-button" style="color: crimson;" id="new-game-button" onClick="location.href='student.html';">New Game</button>
-    </div>
-    <div class="confetti" id="confetti"></div>
-    <div class="win-message" id="win-message">YOU WIN!</div>
-    <div class="overlay" id="overlay">
-        <div>Get Ready To Match!</div>
-        <div>Tap Tiles that will equal the same number to make a match!</div>
-        <div>Work together to Launch that Rocket!</div>
-        <button id="ready-button">I'm Ready!</button>
-    </div>
-
-    <div class="win-overlay" id="win-overlay">
-        GREAT WORK! YOU DID IT!
-        <button onClick="window.location.reload();" style="color: crimson;">New Game</button>
-
-    </div>
-
-    <script src="script.js"></script>
-
-
-
-
-
-
-
-
-
-
-
- 
+  <div id="game-board"></div>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
   <script>
     const peer = new Peer();
@@ -116,41 +60,7 @@
       console.error('Peer error:', err);
     });
 
-    function generateTerm(totalValue) {
-            let firstValue = Math.floor(Math.random() * totalValue);
-            let secondValue = totalValue - firstValue;
-            return `${secondValue} + ${firstValue}`;
-        };
-
-        function generateCard(value_) {
-            return { term: generateTerm(value_), value: value_ };
-        };
-
-        const cardsArray = [
-             generateCard(5),
-             generateCard(5),
-             generateCard(5),
-             generateCard(5),
-             generateCard(4),
-             generateCard(4),
-             generateCard(4),
-             generateCard(4),
-             generateCard(3),
-             generateCard(3),
-             generateCard(3),
-             generateCard(3),
-             generateCard(2),
-             generateCard(2),
-             generateCard(2),
-             generateCard(2),
-             generateCard(1),
-             generateCard(1),
-             generateCard(1),
-             generateCard(1)
-        ];
-
-
-
+    // Additional game logic here
   </script>
 </body>
 </html>

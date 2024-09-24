@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        background: url('studentbackground.png') no-repeat center center fixed;
+        background-size: cover;
+        overflow: hidden;
+    }
+</style>
+<body>
+    <div id="tile-selection" class="overlay">
+        <div>Select Your Tile</div>
+        <div id="tiles-container"></div>
+    </div>
+
+    <div id="join-game" class="overlay" style="display: none;">
+        <input type="text" id="game-code" placeholder="Enter Game Code">
+        <button id="join-button">Join Game</button>
+        <p id="join-status"></p>
+    </div>
+
+    <div id="waiting-overlay" class="overlay" style="display: none;">
+        <div>Waiting for Teacher to Start...</div>
+    </div>
+
+    <div class="game-container" id="game-container" style="display: none;">
+        <div class="memory-game" id="memory-game">
+            <!-- Tiles will be dynamically generated here -->
+        </div>
+    </div>
+
+    <!-- Sound effects -->
+    <audio id="success-sound" src="success.mp3" preload="auto"></audio>
+    <audio id="fail-sound" src="fail.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="win.mp3" preload="auto"></audio>
+    <audio id="tick-sound" src="tick.m4a" preload="auto"></audio>
+    <audio id="background-music" src="background.mp3" preload="auto" loop></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        const peer = new Peer();
+        let selectedTile = null;
+        let conn;
+        let matchCount = 0;  // Track the number of matches
+
+        const tilesContainer = document.getElementById('tiles-container');
+        for (let i = 1; i <= 10; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+            tile.textContent = `Student ${i}`;
+            tile.onclick = () => {
+                selectedTile = tile.textContent;
+                document.getElementById('tile-selection').style.display = 'none';
+                document.getElementById('join-game').style.display = 'flex';
+            };
+            tilesContainer.appendChild(tile);
+        }
+
+        document.getElementById('join-button').onclick = () => {
+            const gameCode = document.getElementById('game-code').value;
+            if (gameCode) {
+                conn = peer.connect(gameCode);
+                console.log(`Attempting to connect to Peer ID: ${gameCode}`);
+
+                conn.on('open', () => {
+                    document.getElementById('join-status').textContent = 'Joined successfully!';
+                    conn.send({ type: 'join', name: selectedTile });
+                    document.getElementById('join-game').style.display = 'none';
+                    document.getElementById('waiting-overlay').style.display = 'flex';
+                });
+
+                conn.on('data', data => {
+                    if (data.type === 'start') {
+                        document.getElementById('waiting-overlay').style.display = 'none';
+                        document.getElementById('game-container').style.display = 'block';
+                        initGame();
+
+
+
+
+
+                    }
+                });
+
+                conn.on('error', err => {
+                    document.getElementById('join-status').textContent = 'Failed to join: ' + err.message;
+                    console.error('Connection error:', err);
+                });
+            } else {
+                document.getElementById('join-status').textContent = 'Please enter a game code.';
+            }
+        };
+
+        // Function to notify the teacher of a completed match
+        function notifyMatchCompleted() {
+            matchCount++;
+            document.getElementById('match-count').textContent = matchCount;
+            conn.send({
+                type: 'match-complete',
+                name: selectedTile // Send student name or tile
+            });
+        }
+
+        // Example call to notifyMatchCompleted
+        // Call this function when a match is completed in your game logic
+        // Example: notifyMatchCompleted();
+
+    </script>
+
+    <div class="counter">Matches: <span id="match-count">0</span></div>
+    <div class="timer">Time: <span id="time-remaining">0</span>s</div>
+    <div class="game-container">
+        <div class="memory-game">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+        <div class="matched-stack">
+            <!-- Matched cards will be moved here -->
+        </div>
+    </div>
+    <div class="game-over" id="game-over-message"></div>
+    <div class="button-container">
+        <button class="reset-button" id="reset-button">Get Tiles!</button>
+    </div>
+    <div class="confetti" id="confetti"></div>
+    <div class="win-message" id="win-message">YOU WIN!</div>
+
+    <div class="win-overlay" id="win-overlay">
+        <button onclick="location.href='forest.html'">Travel to the Forest</button>
+        <button onclick="location.href='castle.html'">Travel to the Castle</button>
+        <button id="secret-button" onclick="location.href='waterfall.html'" style="display:none;">SECRET: Take the Path Behind the Waterfall!</button>
+        <button onClick="window.location.reload();" style="color: crimson;">New Game</button>
+    </div>
+</body>
+
+<script>
+    function generateTerm(totalValue) {
+        let firstValue = Math.floor(Math.random() * totalValue);
+        let secondValue = totalValue - firstValue;
+        return `${secondValue} + ${firstValue}`;
+    }
+
+    function generateCard(value_) {
+        return { term: generateTerm(value_), value: value_ };
+    }
+
+    const cardsArray = [
+        generateCard(5),
+        generateCard(5),
+        generateCard(5),
+        generateCard(5),
+        generateCard(4),
+        generateCard(4),
+        generateCard(4),
+        generateCard(4),
+        generateCard(3),
+        generateCard(3),
+        generateCard(3),
+        generateCard(3),
+        generateCard(2),
+        generateCard(2),
+        generateCard(2),
+        generateCard(2),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1)
+    ];
+</script>
+</html>
