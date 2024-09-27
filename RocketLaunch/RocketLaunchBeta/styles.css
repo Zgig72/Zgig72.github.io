@@ -30,12 +30,12 @@ body {
 
 .counter, .timer {
   font-size: 1.5em;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
   border-radius: 5px;
   text-align: center;
-  width: 40%;
+  width: 25%;
 }
 
 .memory-game {
@@ -314,7 +314,7 @@ body {
 #host-button {
   margin-top: 20px;
   padding: 10px 5px;
-  font-size: 1.2em;
+  font-size: 1em;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -349,12 +349,13 @@ body {
 }
 
 #launchpad {
-  position:relative;
-  top: 30vw;
+  position:absolute;
+  bottom: 10px;
   width: 25%;
-  padding-left: 3%;
+  left: 10px;
   background: rgba(18, 17, 17, 0.8);
   color: white;
+  font-size: 1.5em;
 }
 
 #tiles-container {
@@ -382,3 +383,5 @@ body {
 .tile:hover {
   transform: scale(1.1); /* Add a hover effect for better interactivity */
 }
+
+

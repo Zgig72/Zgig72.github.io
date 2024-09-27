@@ -15,24 +15,94 @@
             background: url('teacherbackground.png');
             background-size: 100% 100vh;
         }
+
+        /* General box styling */
+        #launchpad, #student-list, .counter, .leaderboard, #host-button {
+            border: 2px solid white; /* Apply white border */
+            border-radius: 10px; /* Rounded corners for consistency */
+            padding: 20px;
+            background-color: rgba(46, 61, 73, 0.8); /* Semi-transparent background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Slight shadow for depth */
+            color: white; /* Ensure text is white */
+            margin-bottom: 20px; /* Space between boxes */
+        }
+
+
+        /* Set Game Code to match Launch Pad font size */
+        #host-code {
+            font-size: 1em;
+            text-align: center; /* Center the Game Code */
+            color: white;
+            margin-top: 10px;
+        }
+
+        /* Top Engineers box with reduced height */
+        .leaderboard {
+            max-height: 150px; /* Set max height for 3 entries */
+            overflow-y: auto; /* Scroll if more entries are added */
+        }
+
+        /* Style for the Start Game button */
+        #start-button {
+            display: block; /* Ensure it's visible */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            background-color: #2e3d49;
+            color: white;
+            border: 2px solid white; /* White border */
+            border-radius: 10px;
+            opacity: 1.0; /* Grayed out initially */
+            z-index: 100; /* Ensure it appears above other elements */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, background-color 0.3s, opacity 0.3s;
+        }
+
+        #start-button.enabled {
+            cursor: pointer;
+            opacity: 1; /* Fully visible when enabled */
+        }
+
+
+
+        /* Animation for joined student messages */
+        .joined-message {
+            position: absolute;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            left: 80%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            z-index: 1000;
+            transition: transform 1s ease-out, opacity 6s ease-out;
+        }
+
     </style>
 </head>
 <body>
-    <div id="launchpad">
-        <h1>Launch Pad</h1>
+  
+    <div id="launchpad"><b>Launch Pad</b>
+      <p></p>
+        
         <button id="host-button">Host Game</button>
-        <p id="host-code"></p>
+        
 
         <div id="student-list">
-            <h2>Joined Students:</h2>
-            <ul id="students"></ul>
+            Joined Students: <span id="student-count">0</span>
         </div>
     </div>
     <button id="start-button" style="display:none;">Start Game</button>
 
-    <div class="counter">Class Matches: <span id="matches">0</span></div>
-    <div class="leaderboard">
-        <h3>Top Engineers</h3>
+    <div class="counter">Class Matches: <span id="matches">0</span>
+      <p id="host-code"></p></div>
+    <div class="leaderboard"><b>Top Engineers</b>
+        
         <ol id="leaderboard-list"></ol>
     </div>
 
@@ -44,10 +114,135 @@
 
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
     <script>
+
+
+function triggerSmokeEffect() {
+    const smokeContainer = document.createElement('div');
+    smokeContainer.id = 'smoke-container';
+    document.body.appendChild(smokeContainer);
+        createSmokePuff(smokeContainer);
+        createSmokePuff(smokeContainer);
+        createSmokePuff(smokeContainer);
+    
+}
+
+
+function createSmokePuff(container) {
+    const puff = document.createElement('div');
+    puff.classList.add('smoke');
+
+    // Randomize initial offsets and angles
+    const randomXOffset = (Math.random() - 0.5) * 200; // Random -100 to 100 px range for horizontal movement
+    const dipHeight = Math.random() * 30 + 20; // Random dip height (20px to 50px)
+    const riseHeight = Math.random() * 80 + 100; // Random rise height (100px to 180px)
+    const randomAngle = (Math.random() - 0.5) * 60; // Random angle between -30 and 30 degrees for the final rise
+
+    // Set initial position
+    puff.style.left = '50%';
+    puff.style.transform = `translateX(${randomXOffset}px) rotate(${randomAngle}deg)`;
+
+    // Add to container
+    container.appendChild(puff);
+
+    // Set random animation duration
+    const animationDuration = Math.random() * 3 + 4; // Between 4s to 7s
+    puff.style.animationDuration = `${animationDuration}s`;
+    puff.style.animationFillMode = 'forwards'; // Keep final state
+
+    // Generate dynamic CSS for the puff's unique path
+    const finalX = randomXOffset + (Math.random() > 0.5 ? 100 : -100); // Decide if it goes further left or right
+    const finalY = -riseHeight; // End at a higher vertical position
+
+    // Define the keyframes for this individual puff
+    const keyframes = `
+        @keyframes puff-${Date.now()} {
+            0% {
+                transform: scale(0.5) translateY(0) translateX(0); /* Start position */
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1) translateY(${dipHeight}px) translateX(${finalX}px); /* Move forward while still low */
+            }
+            100% {
+                transform: scale(1.5) translateY(${finalY}px) translateX(${finalX + (randomXOffset / 2)}px); /* Final upward and away movement */
+                opacity: 0;
+            }
+        }
+    `;
+
+    // Add unique keyframes to the document for this puff
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(keyframes));
+    document.head.appendChild(style);
+
+    // Assign the unique animation name
+    puff.style.animationName = `puff-${Date.now()}`; // Use unique keyframe animation for each puff
+
+    // Remove the puff after its animation completes
+    setTimeout(() => {
+        puff.remove();
+    }, animationDuration * 1000); // Match the animation duration
+}
+
+
+
+
+
+// Monitor the matches counter and trigger smoke at 25
+document.getElementById('matches').addEventListener('DOMSubtreeModified', function () {
+    if (matches >= 25) {
+        triggerSmokeEffect();
+    }
+});
+
+
+
+
+
+function showFloatingPlusOne() {
+    // Create a new element for the floating +1
+    const plusOne = document.createElement('div');
+    plusOne.textContent = '+1';
+    plusOne.style.position = 'absolute';
+    plusOne.style.fontSize = '2em';
+    plusOne.style.fontWeight = 'bold';
+    plusOne.style.color = 'white';
+    plusOne.style.left = `${Math.random() * window.innerWidth}px`; // Random horizontal position
+    plusOne.style.top = '50%'; // Start roughly in the middle of the screen
+    plusOne.style.zIndex = '1000';
+    plusOne.style.transition = 'transform 1s ease-out, opacity 1s ease-out'; // Animation settings
+
+    document.body.appendChild(plusOne);
+
+    // Trigger the animation
+    setTimeout(() => {
+        plusOne.style.transform = 'translateY(-100px)'; // Float up by 100px
+        plusOne.style.opacity = '0'; // Fade out
+    }, 100);
+
+    // Remove the element from the DOM after the animation
+    setTimeout(() => {
+        plusOne.remove();
+    }, 1100); // Slightly longer than the animation duration to ensure cleanup
+}
+
+// Example: Call this function whenever the class matches counter increases
+document.getElementById('matches').addEventListener('change', function() {
+    showFloatingPlusOne();
+});
+
+
+
+
+
+
         let peer;
         let connections = [];
-        let matches = 0;
+        let matches = 24;
         let leaderboard = {};
+        let studentCount = 0;
 
         function updateLeaderboard() {
             const sortedLeaderboard = Object.entries(leaderboard)
@@ -62,19 +257,37 @@
             });
         }
 
+        function showJoinedMessage(studentName) {
+            const joinedMessage = document.createElement('div');
+            joinedMessage.textContent = `${studentName} Joined!`;
+            joinedMessage.classList.add('joined-message');
+
+            document.body.appendChild(joinedMessage);
+
+            setTimeout(() => {
+                joinedMessage.style.transform = 'translate(-50%, -150px)';
+                joinedMessage.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => {
+                joinedMessage.remove();
+            }, 1100); // Clean up after animation
+        }
+
         document.getElementById('host-button').onclick = () => {
             const code = generateCode();
             peer = new Peer(code);
-            document.getElementById('host-code').textContent = `Game Code: ${code}`;
+            document.getElementById('host-code').textContent = `Game Code: ${code}`; // Game code matches the font size
 
             peer.on('connection', conn => {
                 connections.push(conn);
                 conn.on('data', data => {
                     if (data.type === 'join') {
+                        studentCount++;
+                        document.getElementById('student-count').textContent = studentCount;
+                        showJoinedMessage(data.name); // Show join animation
+
                         leaderboard[data.name] = 0;
-                        const li = document.createElement('li');
-                        li.textContent = data.name;
-                        document.getElementById('students').appendChild(li);
                         console.log(`Student joined: ${data.name}`);
                     }
 
@@ -83,6 +296,7 @@
                         matches++;
                         document.getElementById('matches').textContent = matches; // Update class matches counter
                         updateLeaderboard(); // Update leaderboard
+                        showFloatingPlusOne();
                     }
                 });
 
@@ -96,7 +310,7 @@
         };
 
         function generateCode() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
+            return Math.floor(100 + Math.random() * 900).toString();
         }
     </script>
 </body>

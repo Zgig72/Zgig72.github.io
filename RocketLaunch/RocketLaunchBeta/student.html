@@ -54,23 +54,47 @@
 
     <script>
         const peer = new Peer();
-        let selectedTile = null;
-        let conn;
-        let matchCount = 0;  // Track the number of matches
 
-        const tilesContainer = document.getElementById('tiles-container');
-        for (let i = 1; i <= 10; i++) {
-            const tile = document.createElement('div');
-            tile.className = 'tile';
-            tile.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
-            tile.textContent = `Student ${i}`;
-            tile.onclick = () => {
-                selectedTile = tile.textContent;
-                document.getElementById('tile-selection').style.display = 'none';
-                document.getElementById('join-game').style.display = 'flex';
-            };
-            tilesContainer.appendChild(tile);
-        }
+
+        let selectedTile = null;
+let conn;
+let matchCount = 0;  // Track the number of matches
+
+const adjectives = [
+  'Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange', 'Pink', 'Teal', 
+  'Violet', 'Brown', 'Cyan', 'White'
+];
+
+const animals = [
+  'Dragon', 'Unicorn', 'Lion', 'Tiger', 'Elephant', 'Phoenix', 'Dolphin', 'Eagle', 
+  'Shark', 'Penguin', 'Bear', 'Wolf', 'Cheetah', 'Hawk', 'Fox', 'Giraffe', 'Rhino', 
+  'Kangaroo', 'Panda', 'Owl', 'Whale', 'Octopus', 'Jaguar', 'Zebra', 'Monkey', 'Crocodile', 
+  'Kitten', 'Falcon', 'Horse', 'Frog', 'Koala', 'Butterfly', 'Beetle', 'Cat', 'Bison',
+  'Lynx', 'Hedgehog', 'Camel', 'Otter', 'Lobster', 'Hummingbird', 'Gorilla', 'Dog', 'Swan',
+  'Sloth', 'Platypus', 'Puppy', 'Fox', 'Peacock', 'Crane', 'Narwhal'
+];
+
+const tilesContainer = document.getElementById('tiles-container');
+for (let i = 0; i < 5; i++) {
+    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const animal = animals[Math.floor(Math.random() * animals.length)];
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.style.backgroundColor = `hsl(${Math.random() * 1}, 100%, 75%)`;
+    tile.textContent = `${adjective} ${animal}`;
+    tile.onclick = () => {
+        selectedTile = tile.textContent;
+        document.getElementById('tile-selection').style.display = 'none';
+        document.getElementById('join-game').style.display = 'flex';
+    };
+    tilesContainer.appendChild(tile);
+}
+
+
+
+
+
+
 
         document.getElementById('join-button').onclick = () => {
             const gameCode = document.getElementById('game-code').value;
@@ -160,22 +184,22 @@
     }
 
     const cardsArray = [
-        generateCard(5),
-        generateCard(5),
-        generateCard(5),
-        generateCard(5),
-        generateCard(4),
-        generateCard(4),
-        generateCard(4),
-        generateCard(4),
-        generateCard(3),
-        generateCard(3),
-        generateCard(3),
-        generateCard(3),
-        generateCard(2),
-        generateCard(2),
-        generateCard(2),
-        generateCard(2),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
+        generateCard(1),
         generateCard(1),
         generateCard(1),
         generateCard(1),
